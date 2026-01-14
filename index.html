@@ -357,6 +357,58 @@
             display: block;
         }
         
+        /* Navigation buttons for questions */
+        .question-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ecf0f1;
+        }
+        
+        .nav-question-btn {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .nav-question-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .nav-question-btn:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+        
+        .nav-question-btn.prev {
+            background-color: #7f8c8d;
+        }
+        
+        .nav-question-btn.prev:hover:not(:disabled) {
+            background-color: #6c7a7b;
+        }
+        
+        .nav-question-btn.next {
+            background-color: #27ae60;
+        }
+        
+        .nav-question-btn.next:hover:not(:disabled) {
+            background-color: #229954;
+        }
+        
+        .nav-question-btn span {
+            font-size: 1.2rem;
+        }
+        
         /* Media Queries for Mobile Devices */
         @media (max-width: 768px) {
             body {
@@ -422,6 +474,16 @@
                 text-align: center;
                 font-size: 0.9rem;
             }
+            
+            .question-navigation {
+                margin-top: 20px;
+                padding-top: 15px;
+            }
+            
+            .nav-question-btn {
+                padding: 8px 16px;
+                font-size: 0.9rem;
+            }
         }
         
         @media (max-width: 480px) {
@@ -459,6 +521,16 @@
             .nav-btn {
                 padding: 10px 12px;
                 font-size: 13px;
+            }
+            
+            .question-navigation {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .nav-question-btn {
+                width: 100%;
+                justify-content: center;
             }
         }
     </style>
@@ -522,6 +594,14 @@
                         <span>Madrid</span>
                     </div>
                 </div>
+                <div class="question-navigation">
+                    <button class="nav-question-btn prev" id="prev-1" disabled>
+                        <span>←</span> Previous
+                    </button>
+                    <button class="nav-question-btn next" id="next-1">
+                        Next <span>→</span>
+                    </button>
+                </div>
             </div>
             
             <div class="question" data-question="2">
@@ -543,6 +623,14 @@
                         <input type="radio" name="q2" value="d">
                         <span>Saturn</span>
                     </div>
+                </div>
+                <div class="question-navigation">
+                    <button class="nav-question-btn prev" id="prev-2">
+                        <span>←</span> Previous
+                    </button>
+                    <button class="nav-question-btn next" id="next-2">
+                        Next <span>→</span>
+                    </button>
                 </div>
             </div>
             
@@ -566,6 +654,14 @@
                         <span>Michelangelo</span>
                     </div>
                 </div>
+                <div class="question-navigation">
+                    <button class="nav-question-btn prev" id="prev-3">
+                        <span>←</span> Previous
+                    </button>
+                    <button class="nav-question-btn next" id="next-3">
+                        Next <span>→</span>
+                    </button>
+                </div>
             </div>
             
             <div class="question" data-question="4">
@@ -588,6 +684,14 @@
                         <span>Pacific Ocean</span>
                     </div>
                 </div>
+                <div class="question-navigation">
+                    <button class="nav-question-btn prev" id="prev-4">
+                        <span>←</span> Previous
+                    </button>
+                    <button class="nav-question-btn next" id="next-4">
+                        Next <span>→</span>
+                    </button>
+                </div>
             </div>
             
             <div class="question" data-question="5">
@@ -609,6 +713,14 @@
                         <input type="radio" name="q5" value="d">
                         <span>Organ</span>
                     </div>
+                </div>
+                <div class="question-navigation">
+                    <button class="nav-question-btn prev" id="prev-5">
+                        <span>←</span> Previous
+                    </button>
+                    <button class="nav-question-btn next" id="next-5">
+                        Next <span>→</span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -640,6 +752,14 @@
                         <span>Colosseum</span>
                     </div>
                 </div>
+                <div class="question-navigation">
+                    <button class="nav-question-btn prev" id="prev-6">
+                        <span>←</span> Previous
+                    </button>
+                    <button class="nav-question-btn next" id="next-6">
+                        Next <span>→</span>
+                    </button>
+                </div>
             </div>
             
             <div class="question" data-question="7">
@@ -664,6 +784,14 @@
                         <input type="radio" name="q7" value="d">
                         <span>Leopard</span>
                     </div>
+                </div>
+                <div class="question-navigation">
+                    <button class="nav-question-btn prev" id="prev-7">
+                        <span>←</span> Previous
+                    </button>
+                    <button class="nav-question-btn next" id="next-7">
+                        Next <span>→</span>
+                    </button>
                 </div>
             </div>
             
@@ -690,6 +818,14 @@
                         <span>Girl with a Pearl Earring</span>
                     </div>
                 </div>
+                <div class="question-navigation">
+                    <button class="nav-question-btn prev" id="prev-8">
+                        <span>←</span> Previous
+                    </button>
+                    <button class="nav-question-btn next" id="next-8">
+                        Next <span>→</span>
+                    </button>
+                </div>
             </div>
             
             <div class="question" data-question="9">
@@ -715,6 +851,14 @@
                         <span>Thailand</span>
                     </div>
                 </div>
+                <div class="question-navigation">
+                    <button class="nav-question-btn prev" id="prev-9">
+                        <span>←</span> Previous
+                    </button>
+                    <button class="nav-question-btn next" id="next-9">
+                        Next <span>→</span>
+                    </button>
+                </div>
             </div>
             
             <div class="question" data-question="10">
@@ -739,6 +883,14 @@
                         <input type="radio" name="q10" value="d">
                         <span>Viola</span>
                     </div>
+                </div>
+                <div class="question-navigation">
+                    <button class="nav-question-btn prev" id="prev-10">
+                        <span>←</span> Previous
+                    </button>
+                    <button class="nav-question-btn next" id="next-10">
+                        Next <span>→</span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -773,6 +925,14 @@
                         <span>Cow</span>
                     </div>
                 </div>
+                <div class="question-navigation">
+                    <button class="nav-question-btn prev" id="prev-11">
+                        <span>←</span> Previous
+                    </button>
+                    <button class="nav-question-btn next" id="next-11">
+                        Next <span>→</span>
+                    </button>
+                </div>
             </div>
             
             <div class="question" data-question="12">
@@ -800,6 +960,14 @@
                         <input type="radio" name="q12" value="d">
                         <span>Pop</span>
                     </div>
+                </div>
+                <div class="question-navigation">
+                    <button class="nav-question-btn prev" id="prev-12">
+                        <span>←</span> Previous
+                    </button>
+                    <button class="nav-question-btn next" id="next-12">
+                        Next <span>→</span>
+                    </button>
                 </div>
             </div>
             
@@ -829,6 +997,14 @@
                         <span>Ocean waves</span>
                     </div>
                 </div>
+                <div class="question-navigation">
+                    <button class="nav-question-btn prev" id="prev-13">
+                        <span>←</span> Previous
+                    </button>
+                    <button class="nav-question-btn next" id="next-13">
+                        Next <span>→</span>
+                    </button>
+                </div>
             </div>
             
             <div class="question" data-question="14">
@@ -857,6 +1033,14 @@
                         <span>Italian</span>
                     </div>
                 </div>
+                <div class="question-navigation">
+                    <button class="nav-question-btn prev" id="prev-14">
+                        <span>←</span> Previous
+                    </button>
+                    <button class="nav-question-btn next" id="next-14">
+                        Next <span>→</span>
+                    </button>
+                </div>
             </div>
             
             <div class="question" data-question="15">
@@ -884,6 +1068,14 @@
                         <input type="radio" name="q15" value="d">
                         <span>Trumpet</span>
                     </div>
+                </div>
+                <div class="question-navigation">
+                    <button class="nav-question-btn prev" id="prev-15">
+                        <span>←</span> Previous
+                    </button>
+                    <button class="nav-question-btn next" id="next-15" disabled>
+                        Next <span>→</span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -1222,11 +1414,36 @@
             document.body.style.overflow = ''; // Restore scrolling
         }
         
+        // Handle previous/next navigation
+        function setupQuestionNavigation() {
+            for (let i = 1; i <= 15; i++) {
+                const prevBtn = document.getElementById(`prev-${i}`);
+                const nextBtn = document.getElementById(`next-${i}`);
+                
+                if (prevBtn) {
+                    prevBtn.addEventListener('click', () => {
+                        if (i > 1) {
+                            navigateToQuestion(i - 1);
+                        }
+                    });
+                }
+                
+                if (nextBtn) {
+                    nextBtn.addEventListener('click', () => {
+                        if (i < 15) {
+                            navigateToQuestion(i + 1);
+                        }
+                    });
+                }
+            }
+        }
+        
         // Initialize the quiz
         function initQuiz() {
             initQuestionNav();
             handleOptionSelection();
             handleSectionNavigation();
+            setupQuestionNavigation();
             
             // Add event listener to restart button
             restartBtn.addEventListener('click', restartQuiz);
