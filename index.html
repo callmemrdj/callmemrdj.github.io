@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Quiz Application</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            display: flex;
+            min-height: 100vh;
+            background-color: #f5f7fa;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background-color: #2c3e50;
+            padding: 20px;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .logos {    
+            margin-left: 55px;
+        }
+        
+        .sidebar h2 {
+            text-align: center;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #34495e;
+        }
+        .sidebar h1 {
+            margin-left: 30px;
+        }
+        
+        .section-buttons, .question-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .nav-btn {
+            padding: 10px 15px;
+            background-color: #34495e;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-align: left;
+        }
+        
+        .nav-btn:hover {
+            background-color: #4a627a;
+        }
+        
+        .nav-btn.active {
+            background-color: #3498db;
+        }
+        
+        .question-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .q-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #34495e;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .q-btn:hover {
+            background-color: #4a627a;
+        }
+        
+        .q-btn.answered {
+            background-color: #27ae60;
+        }
+        
+        .q-btn.active {
+            background-color: #3498db;
+            transform: scale(1.1);
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+        
+        .section {
+            display: none;
+            background-color: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .section.active {
+            display: block;
+        }
+        
+        .question {
+            margin-bottom: 30px;
+            display: none;
+        }
+        
+        .question.active {
+            display: block;
+        }
+        
+        .question h3 {
+            margin-bottom: 20px;
+            color: #2c3e50;
+            font-size: 1.4rem;
+        }
+        
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .option {
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .option:hover {
+            background-color: #f8f9fa;
+            border-color: #3498db;
+        }
+        
+        .option.selected {
+            background-color: #e3f2fd;
+            border-color: #3498db;
+        }
+        
+        .option.correct {
+            background-color: #e8f5e9;
+            border-color: #27ae60;
+        }
+        
+        .option.incorrect {
+            background-color: #ffebee;
+            border-color: #e74c3c;
+        }
+        
+        .option input {
+            margin-right: 10px;
+        }
+        
+        .image-container {
+            max-width: 100%;
+            margin: 15px 0;
+        }
+                
+        .image-container img {
+            max-width: 100%;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .audio-container {
+            margin: 15px 0;
+        }
+        
+        .audio-container audio {
+            width: 100%;
+        }
+        
+        .submit-btn {
+            padding: 12px 24px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+        
+        .submit-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .results {
+            display: none;
+        }
+        
+        .results.active {
+            display: block;
+        }
+        
+        .score-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .score {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #3498db;
+            margin: 20px 0;
+        }
+        
+        .result-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 6px;
+            background-color: #f8f9fa;
+        }
+        
+        .result-item h4 {
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        
+        .result-item p {
+            margin-bottom: 5px;
+        }
+        
+        .correct-answer {
+            color: #27ae60;
+            font-weight: bold;
+        }
+        
+        .incorrect-answer {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background-color: #ecf0f1;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background-color: #3498db;
+            width: 0%;
+            transition: width 0.3s;
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ecf0f1;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            background-color: #2ecc71;
+            color: white;
+            border-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transform: translateY(-100px);
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+        
+        .notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                flex-direction: row;
+                overflow-x: auto;
+            }
+            
+            .section-buttons, .question-buttons {
+                flex-direction: row;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logos">
+                <img src="assets/Logobin.png" alt="Logobin">
+        </div>
+        <h4>Bhumi Ika Nuswantara</h4>
+        <h2>Quiz Navigation</h2>
+        <div class="section-buttons">
+            <button class="nav-btn active" data-section="text-questions">Text Questions</button>
+            <button class="nav-btn" data-section="image-questions">Image Questions</button>
+            <button class="nav-btn" data-section="audio-questions">Audio Questions</button>
+            <button class="nav-btn" data-section="results">View Results</button>
+        </div>
+        <div class="question-buttons">
+            <h3>Questions</h3>
+            <div class="question-nav" id="question-nav">
+                <!-- Question buttons will be generated by JavaScript -->
+            </div>
+        </div>
+    </div>
+    
+    <div class="main-content">
+        <div class="progress-bar">
+            <div class="progress" id="progress"></div>
+        </div>
+        
+        <!-- Text Questions Section -->
+        <div class="section active" id="text-questions">
+            <h2 class="section-title">Text Questions</h2>
+            
+            <div class="question active" data-question="1">
+                <h3>1. What is the capital of France?</h3>
+                <div class="options">
+                    <div class="option" data-answer="a">
+                        <input type="radio" name="q1" value="a">
+                        <span>London</span>
+                    </div>
+                    <div class="option" data-answer="b">
+                        <input type="radio" name="q1" value="b">
+                        <span>Berlin</span>
+                    </div>
+                    <div class="option" data-answer="c">
+                        <input type="radio" name="q1" value="c">
+                        <span>Paris</span>
+                    </div>
+                    <div class="option" data-answer="d">
+                        <input type="radio" name="q1" value="d">
+                        <span>Madrid</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="question" data-question="2">
+                <h3>2. Which planet is known as the Red Planet?</h3>
+                <div class="options">
+                    <div class="option" data-answer="a">
+                        <input type="radio" name="q2" value="a">
+                        <span>Venus</span>
+                    </div>
+                    <div class="option" data-answer="b">
+                        <input type="radio" name="q2" value="b">
+                        <span>Mars</span>
+                    </div>
+                    <div class="option" data-answer="c">
+                        <input type="radio" name="q2" value="c">
+                        <span>Jupiter</span>
+                    </div>
+                    <div class="option" data-answer="d">
+                        <input type="radio" name="q2" value="d">
+                        <span>Saturn</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="question" data-question="3">
+                <h3>3. Who painted the Mona Lisa?</h3>
+                <div class="options">
+                    <div class="option" data-answer="a">
+                        <input type="radio" name="q3" value="a">
+                        <span>Vincent van Gogh</span>
+                    </div>
+                    <div class="option" data-answer="b">
+                        <input type="radio" name="q3" value="b">
+                        <span>Pablo Picasso</span>
+                    </div>
+                    <div class="option" data-answer="c">
+                        <input type="radio" name="q3" value="c">
+                        <span>Leonardo da Vinci</span>
+                    </div>
+                    <div class="option" data-answer="d">
+                        <input type="radio" name="q3" value="d">
+                        <span>Michelangelo</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="question" data-question="4">
+                <h3>4. What is the largest ocean on Earth?</h3>
+                <div class="options">
+                    <div class="option" data-answer="a">
+                        <input type="radio" name="q4" value="a">
+                        <span>Atlantic Ocean</span>
+                    </div>
+                    <div class="option" data-answer="b">
+                        <input type="radio" name="q4" value="b">
+                        <span>Indian Ocean</span>
+                    </div>
+                    <div class="option" data-answer="c">
+                        <input type="radio" name="q4" value="c">
+                        <span>Arctic Ocean</span>
+                    </div>
+                    <div class="option" data-answer="d">
+                        <input type="radio" name="q4" value="d">
+                        <span>Pacific Ocean</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="question" data-question="5">
+                <h3>5. What is the smallest unit of life?</h3>
+                <div class="options">
+                    <div class="option" data-answer="a">
+                        <input type="radio" name="q5" value="a">
+                        <span>Atom</span>
+                    </div>
+                    <div class="option" data-answer="b">
+                        <input type="radio" name="q5" value="b">
+                        <span>Cell</span>
+                    </div>
+                    <div class="option" data-answer="c">
+                        <input type="radio" name="q5" value="c">
+                        <span>Molecule</span>
+                    </div>
+                    <div class="option" data-answer="d">
+                        <input type="radio" name="q5" value="d">
+                        <span>Organ</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Image Questions Section -->
+        <div class="section" id="image-questions">
+            <h2 class="section-title">Image Questions</h2>
+            
+            <div class="question active" data-question="6">
+                <h3>6. Identify this landmark:</h3>
+                <div class="image-container">
+                    <img src="https://picsum.photos/seed/eiffeltower/600/400.jpg" alt="Landmark">
+                </div>
+                <div class="options">
+                    <div class="option" data-answer="a">
+                        <input type="radio" name="q6" value="a">
+                        <span>Statue of Liberty</span>
+                    </div>
+                    <div class="option" data-answer="b">
+                        <input type="radio" name="q6" value="b">
+                        <span>Eiffel Tower</span>
+                    </div>
+                    <div class="option" data-answer="c">
+                        <input type="radio" name="q6" value="c">
+                        <span>Big Ben</span>
+                    </div>
+                    <div class="option" data-answer="d">
+                        <input type="radio" name="q6" value="d">
+                        <span>Colosseum</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="question" data-question="7">
+                <h3>7. Which animal is shown in this image?</h3>
+                <div class="image-container">
+                    <img src="https://picsum.photos/seed/lion/600/400.jpg" alt="Animal">
+                </div>
+                <div class="options">
+                    <div class="option" data-answer="a">
+                        <input type="radio" name="q7" value="a">
+                        <span>Tiger</span>
+                    </div>
+                    <div class="option" data-answer="b">
+                        <input type="radio" name="q7" value="b">
+                        <span>Lion</span>
+                    </div>
+                    <div class="option" data-answer="c">
+                        <input type="radio" name="q7" value="c">
+                        <span>Cheetah</span>
+                    </div>
+                    <div class="option" data-answer="d">
+                        <input type="radio" name="q7" value="d">
+                        <span>Leopard</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="question" data-question="8">
+                <h3>8. Identify this famous painting:</h3>
+                <div class="image-container">
+                    <img src="https://picsum.photos/seed/starrynight/600/400.jpg" alt="Painting">
+                </div>
+                <div class="options">
+                    <div class="option" data-answer="a">
+                        <input type="radio" name="q8" value="a">
+                        <span>The Starry Night</span>
+                    </div>
+                    <div class="option" data-answer="b">
+                        <input type="radio" name="q8" value="b">
+                        <span>The Persistence of Memory</span>
+                    </div>
+                    <div class="option" data-answer="c">
+                        <input type="radio" name="q8" value="c">
+                        <span>The Scream</span>
+                    </div>
+                    <div class="option" data-answer="d">
+                        <input type="radio" name="q8" value="d">
+                        <span>Girl with a Pearl Earring</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="question" data-question="9">
+                <h3>9. Which country's flag is shown?</h3>
+                <div class="image-container">
+                    <img src="https://picsum.photos/seed/japanflag/600/400.jpg" alt="Flag">
+                </div>
+                <div class="options">
+                    <div class="option" data-answer="a">
+                        <input type="radio" name="q9" value="a">
+                        <span>China</span>
+                    </div>
+                    <div class="option" data-answer="b">
+                        <input type="radio" name="q9" value="b">
+                        <span>Japan</span>
+                    </div>
+                    <div class="option" data-answer="c">
+                        <input type="radio" name="q9" value="c">
+                        <span>South Korea</span>
+                    </div>
+                    <div class="option" data-answer="d">
+                        <input type="radio" name="q9" value="d">
+                        <span>Thailand</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="question" data-question="10">
+                <h3>10. Identify this musical instrument:</h3>
+                <div class="image-container">
+                    <img src="https://picsum.photos/seed/violin/600/400.jpg" alt="Instrument">
+                </div>
+                <div class="options">
+                    <div class="option" data-answer="a">
+                        <input type="radio" name="q10" value="a">
+                        <span>Violin</span>
+                    </div>
+                    <div class="option" data-answer="b">
+                        <input type="radio" name="q10" value="b">
+                        <span>Cello</span>
+                    </div>
+                    <div class="option" data-answer="c">
+                        <input type="radio" name="q10" value="c">
+                        <span>Guitar</span>
+                    </div>
+                    <div class="option" data-answer="d">
+                        <input type="radio" name="q10" value="d">
+                        <span>Viola</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Audio Questions Section -->
+        <div class="section" id="audio-questions">
+            <h2 class="section-title">Audio Questions</h2>
+            
+            <div class="question active" data-question="11">
+                <h3>11. Identify this animal sound:</h3>
+                <div class="audio-container">
+                    <audio controls>
+                        <source src="audiofolder/kiku1.mp3" type="audio/mp3">
+                        Your browser does not support the audio element.
+                    </audio>
+                </div>
+                <div class="options">
+                    <div class="option" data-answer="a">
+                        <input type="radio" name="q11" value="a">
+                        <span>Dog</span>
+                    </div>
+                    <div class="option" data-answer="b">
+                        <input type="radio" name="q11" value="b">
+                        <span>Cat</span>
+                    </div>
+                    <div class="option" data-answer="c">
+                        <input type="radio" name="q11" value="c">
+                        <span>Bird</span>
+                    </div>
+                    <div class="option" data-answer="d">
+                        <input type="radio" name="q11" value="d">
+                        <span>Cow</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="question" data-question="12">
+                <h3>12. What type of music is playing?</h3>
+                <div class="audio-container">
+                    <audio controls>
+                        <source src="audiofolder/kiku2.mp3" type="audio/mp3">
+                        Your browser does not support the audio element.
+                    </audio>
+                </div>
+                <div class="options">
+                    <div class="option" data-answer="a">
+                        <input type="radio" name="q12" value="a">
+                        <span>Classical</span>
+                    </div>
+                    <div class="option" data-answer="b">
+                        <input type="radio" name="q12" value="b">
+                        <span>Jazz</span>
+                    </div>
+                    <div class="option" data-answer="c">
+                        <input type="radio" name="q12" value="c">
+                        <span>Rock</span>
+                    </div>
+                    <div class="option" data-answer="d">
+                        <input type="radio" name="q12" value="d">
+                        <span>Pop</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="question" data-question="13">
+                <h3>13. Identify this natural sound:</h3>
+                <div class="audio-container">
+                    <audio controls>
+                        <source src="audiofolder/kiku3.mp3" type="audio/mp3">
+                        Your browser does not support the audio element.
+                    </audio>
+                </div>
+                <div class="options">
+                    <div class="option" data-answer="a">
+                        <input type="radio" name="q13" value="a">
+                        <span>Rain</span>
+                    </div>
+                    <div class="option" data-answer="b">
+                        <input type="radio" name="q13" value="b">
+                        <span>Thunder</span>
+                    </div>
+                    <div class="option" data-answer="c">
+                        <input type="radio" name="q13" value="c">
+                        <span>Wind</span>
+                    </div>
+                    <div class="option" data-answer="d">
+                        <input type="radio" name="q13" value="d">
+                        <span>Ocean waves</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="question" data-question="14">
+                <h3>14. What language is being spoken?</h3>
+                <div class="audio-container">
+                    <audio controls>
+                        <source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.wav" type="audio/wav">
+                        Your browser does not support the audio element.
+                    </audio>
+                </div>
+                <div class="options">
+                    <div class="option" data-answer="a">
+                        <input type="radio" name="q14" value="a">
+                        <span>Spanish</span>
+                    </div>
+                    <div class="option" data-answer="b">
+                        <input type="radio" name="q14" value="b">
+                        <span>French</span>
+                    </div>
+                    <div class="option" data-answer="c">
+                        <input type="radio" name="q14" value="c">
+                        <span>German</span>
+                    </div>
+                    <div class="option" data-answer="d">
+                        <input type="radio" name="q14" value="d">
+                        <span>Italian</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="question" data-question="15">
+                <h3>15. Identify this musical instrument:</h3>
+                <div class="audio-container">
+                    <audio controls>
+                        <source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.wav" type="audio/wav">
+                        Your browser does not support the audio element.
+                    </audio>
+                </div>
+                <div class="options">
+                    <div class="option" data-answer="a">
+                        <input type="radio" name="q15" value="a">
+                        <span>Piano</span>
+                    </div>
+                    <div class="option" data-answer="b">
+                        <input type="radio" name="q15" value="b">
+                        <span>Guitar</span>
+                    </div>
+                    <div class="option" data-answer="c">
+                        <input type="radio" name="q15" value="c">
+                        <span>Drums</span>
+                    </div>
+                    <div class="option" data-answer="d">
+                        <input type="radio" name="q15" value="d">
+                        <span>Trumpet</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Results Section -->
+        <div class="section results" id="results">
+            <h2 class="section-title">Quiz Results</h2>
+            
+            <div class="score-container">
+                <h3>Your Score</h3>
+                <div class="score" id="score">0/15</div>
+                <p id="score-message">You haven't completed the quiz yet.</p>
+            </div>
+            
+            <div id="results-container">
+                <p>Please complete all questions to see your results.</p>
+            </div>
+            
+            <button class="submit-btn" id="restart-btn">Restart Quiz</button>
+        </div>
+    </div>
+    
+    <div class="notification" id="notification">Answer saved!</div>
+    
+    <script>
+        // Quiz data structure
+        const quizData = {
+            textQuestions: [
+                { id: 1, correctAnswer: 'c' },
+                { id: 2, correctAnswer: 'b' },
+                { id: 3, correctAnswer: 'c' },
+                { id: 4, correctAnswer: 'd' },
+                { id: 5, correctAnswer: 'b' }
+            ],
+            imageQuestions: [
+                { id: 6, correctAnswer: 'b' },
+                { id: 7, correctAnswer: 'b' },
+                { id: 8, correctAnswer: 'a' },
+                { id: 9, correctAnswer: 'b' },
+                { id: 10, correctAnswer: 'a' }
+            ],
+            audioQuestions: [
+                { id: 11, correctAnswer: 'c' },
+                { id: 12, correctAnswer: 'a' },
+                { id: 13, correctAnswer: 'd' },
+                { id: 14, correctAnswer: 'b' },
+                { id: 15, correctAnswer: 'a' }
+            ]
+        };
+        
+        // User answers storage
+        const userAnswers = {};
+        
+        // DOM elements
+        const sectionButtons = document.querySelectorAll('.nav-btn');
+        const sections = document.querySelectorAll('.section');
+        const questions = document.querySelectorAll('.question');
+        const options = document.querySelectorAll('.option');
+        const progressBar = document.getElementById('progress');
+        const questionNav = document.getElementById('question-nav');
+        const resultsContainer = document.getElementById('results-container');
+        const scoreElement = document.getElementById('score');
+        const scoreMessage = document.getElementById('score-message');
+        const restartBtn = document.getElementById('restart-btn');
+        const notification = document.getElementById('notification');
+        
+        // Initialize question navigation buttons
+        function initQuestionNav() {
+            for (let i = 1; i <= 15; i++) {
+                const button = document.createElement('button');
+                button.className = 'q-btn';
+                button.textContent = i;
+                button.dataset.question = i;
+                
+                if (i === 1) {
+                    button.classList.add('active');
+                }
+                
+                button.addEventListener('click', () => {
+                    navigateToQuestion(i);
+                });
+                
+                questionNav.appendChild(button);
+            }
+        }
+        
+        // Navigate to a specific question
+        function navigateToQuestion(questionId) {
+            // Hide all questions
+            questions.forEach(q => q.classList.remove('active'));
+            
+            // Show the selected question
+            const targetQuestion = document.querySelector(`.question[data-question="${questionId}"]`);
+            if (targetQuestion) {
+                targetQuestion.classList.add('active');
+                
+                // Update the active question button
+                document.querySelectorAll('.q-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                    if (parseInt(btn.dataset.question) === questionId) {
+                        btn.classList.add('active');
+                    }
+                });
+                
+                // Determine which section this question belongs to
+                let targetSection;
+                if (questionId <= 5) {
+                    targetSection = 'text-questions';
+                } else if (questionId <= 10) {
+                    targetSection = 'image-questions';
+                } else {
+                    targetSection = 'audio-questions';
+                }
+                
+                // Update the active section
+                sections.forEach(section => section.classList.remove('active'));
+                document.getElementById(targetSection).classList.add('active');
+                
+                // Update the active section button
+                sectionButtons.forEach(btn => {
+                    btn.classList.remove('active');
+                    if (btn.dataset.section === targetSection) {
+                        btn.classList.add('active');
+                    }
+                });
+            }
+        }
+        
+        // Handle option selection
+        function handleOptionSelection() {
+            options.forEach(option => {
+                option.addEventListener('click', function() {
+                    const questionId = this.closest('.question').dataset.question;
+                    const answer = this.dataset.answer;
+                    
+                    // Store the user's answer
+                    userAnswers[questionId] = answer;
+                    
+                    // Update UI to show selection
+                    const questionOptions = this.closest('.options').querySelectorAll('.option');
+                    questionOptions.forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                    
+                    // Mark the question as answered in the navigation
+                    const questionButton = document.querySelector(`.q-btn[data-question="${questionId}"]`);
+                    if (questionButton) {
+                        questionButton.classList.add('answered');
+                    }
+                    
+                    // Update progress bar
+                    updateProgressBar();
+                    
+                    // Show notification
+                    showNotification('Answer saved!');
+                });
+            });
+        }
+        
+        // Update progress bar
+        function updateProgressBar() {
+            const totalQuestions = 15;
+            const answeredQuestions = Object.keys(userAnswers).length;
+            const progress = (answeredQuestions / totalQuestions) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+        
+        // Show notification
+        function showNotification(message) {
+            notification.textContent = message;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 2000);
+        }
+        
+        // Calculate and display results
+        function calculateResults() {
+            let correctCount = 0;
+            const allQuestions = [
+                ...quizData.textQuestions,
+                ...quizData.imageQuestions,
+                ...quizData.audioQuestions
+            ];
+            
+            const resultsHTML = allQuestions.map(question => {
+                const userAnswer = userAnswers[question.id];
+                const isCorrect = userAnswer === question.correctAnswer;
+                
+                if (isCorrect) {
+                    correctCount++;
+                }
+                
+                // Get question text
+                const questionElement = document.querySelector(`.question[data-question="${question.id}"] h3`);
+                const questionText = questionElement ? questionElement.textContent : `Question ${question.id}`;
+                
+                // Get user answer text
+                let userAnswerText = 'Not answered';
+                if (userAnswer) {
+                    const userAnswerElement = document.querySelector(`.question[data-question="${question.id}"] .option[data-answer="${userAnswer}"] span`);
+                    userAnswerText = userAnswerElement ? userAnswerElement.textContent : userAnswer;
+                }
+                
+                // Get correct answer text
+                const correctAnswerElement = document.querySelector(`.question[data-question="${question.id}"] .option[data-answer="${question.correctAnswer}"] span`);
+                const correctAnswerText = correctAnswerElement ? correctAnswerElement.textContent : question.correctAnswer;
+                
+                return `
+                    <div class="result-item">
+                        <h4>${questionText}</h4>
+                        <p>Your answer: <span class="${isCorrect ? 'correct-answer' : 'incorrect-answer'}">${userAnswerText}</span></p>
+                        ${!isCorrect ? `<p>Correct answer: <span class="correct-answer">${correctAnswerText}</span></p>` : ''}
+                    </div>
+                `;
+            }).join('');
+            
+            // Update score
+            scoreElement.textContent = `${correctCount}/15`;
+            
+            // Update score message
+            let message = '';
+            const percentage = (correctCount / 15) * 100;
+            
+            if (percentage === 100) {
+                message = 'Perfect! You got all questions right!';
+            } else if (percentage >= 80) {
+                message = 'Excellent work! You did a great job!';
+            } else if (percentage >= 60) {
+                message = 'Good job! You did well!';
+            } else if (percentage >= 40) {
+                message = 'Not bad, but there\'s room for improvement.';
+            } else {
+                message = 'Keep practicing and try again!';
+            }
+            
+            scoreMessage.textContent = message;
+            
+            // Display results
+            resultsContainer.innerHTML = resultsHTML;
+        }
+        
+        // Handle section navigation
+        function handleSectionNavigation() {
+            sectionButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const targetSection = this.dataset.section;
+                    
+                    // Special handling for results section
+                    if (targetSection === 'results') {
+                        calculateResults();
+                    }
+                    
+                    // Update active section
+                    sections.forEach(section => section.classList.remove('active'));
+                    document.getElementById(targetSection).classList.add('active');
+                    
+                    // Update active button
+                    sectionButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+        }
+        
+        // Restart quiz
+        function restartQuiz() {
+            // Clear user answers
+            for (const key in userAnswers) {
+                delete userAnswers[key];
+            }
+            
+            // Reset UI
+            options.forEach(option => {
+                option.classList.remove('selected', 'correct', 'incorrect');
+                const radio = option.querySelector('input[type="radio"]');
+                if (radio) {
+                    radio.checked = false;
+                }
+            });
+            
+            // Reset question navigation
+            document.querySelectorAll('.q-btn').forEach(btn => {
+                btn.classList.remove('answered');
+                if (btn.dataset.question === '1') {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+            
+            // Reset progress bar
+            progressBar.style.width = '0%';
+            
+            // Navigate to first question
+            navigateToQuestion(1);
+            
+            // Show first section
+            sections.forEach(section => section.classList.remove('active'));
+            document.getElementById('text-questions').classList.add('active');
+            
+            // Update active section button
+            sectionButtons.forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.section === 'text-questions') {
+                    btn.classList.add('active');
+                }
+            });
+            
+            showNotification('Quiz restarted!');
+        }
+        
+        // Initialize the quiz
+        function initQuiz() {
+            initQuestionNav();
+            handleOptionSelection();
+            handleSectionNavigation();
+            
+            // Add event listener to restart button
+            restartBtn.addEventListener('click', restartQuiz);
+            
+            // Set initial progress
+            updateProgressBar();
+        }
+        
+        // Start the quiz when the page loads
+        document.addEventListener('DOMContentLoaded', initQuiz);
+    </script>
+</body>
+</html>
